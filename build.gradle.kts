@@ -1,7 +1,23 @@
 plugins {
     java
     application
+    id("org.javamodularity.moduleplugin") version "1.4.1"
 }
+
+configurations {
+    "implementation" {
+        // Outdated dependencies, split package between jaxb.impl and jaxb.core
+        exclude(group = "com.sun.xml.bind", module = "jaxb-core")
+        exclude(group = "com.sun.xml.bind", module = "jaxb-impl")
+
+        // Outdated dependency, split package between activation and jakarta.activation
+        exclude(group = "javax.activation", module = "activation")
+    }
+}
+
+patchModules.config = listOf(
+        "xmlpull=xpp3_min-1.1.4c.jar"
+)
 
 repositories {
     jcenter()
@@ -16,5 +32,5 @@ dependencies {
 }
 
 application {
-    mainClassName = "io.github.mwkroening.modularoptaplannerjaxb.App"
+    mainClassName = "$moduleName/io.github.mwkroening.modularoptaplannerjaxb.App"
 }
